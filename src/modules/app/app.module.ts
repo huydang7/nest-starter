@@ -3,6 +3,8 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { MongooseModule, MongooseModuleAsyncOptions } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from 'src/config';
 import { AllExceptionsFilter } from 'src/exceptions/all-exceptions-filter';
+import { PlayerGateway } from 'src/gateway/player.gateway';
+import { UserGateway } from 'src/gateway/user.gateway';
 import { TransformInterceptor } from 'src/intercepters/response.interceptor';
 import { AuthModule } from '../auth/auth.module';
 import { AppController } from './app.controller';
@@ -26,6 +28,8 @@ import { AppService } from './app.service';
   ],
   controllers: [AppController],
   providers: [
+    PlayerGateway,
+    UserGateway,
     AppService,
     {
       provide: APP_FILTER,
