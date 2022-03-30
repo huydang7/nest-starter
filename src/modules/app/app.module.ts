@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { MongooseModule, MongooseModuleAsyncOptions } from '@nestjs/mongoose';
-import { ConfigModule, ConfigService } from 'src/config';
-import { AllExceptionsFilter } from 'src/exceptions/all-exceptions-filter';
-import { PlayerGateway } from 'src/gateway/player.gateway';
-import { UserGateway } from 'src/gateway/user.gateway';
-import { TransformInterceptor } from 'src/intercepters/response.interceptor';
+import { ConfigModule, ConfigService } from '../../config';
+import { AllExceptionsFilter } from '../../exceptions/all-exceptions-filter';
+import { PlayerGateway } from '../../gateway/player.gateway';
+import { UserGateway } from '../../gateway/user.gateway';
+import { TransformInterceptor } from '../../intercepters/response.interceptor';
 import { AuthModule } from '../auth/auth.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -21,8 +21,6 @@ import { AppService } from './app.service';
           uri: configService.get('MONGO_DB_URL'),
           useNewUrlParser: true,
           useUnifiedTopology: true,
-          useCreateIndex: true,
-          useFindAndModify: false,
         } as MongooseModuleAsyncOptions),
     }),
   ],

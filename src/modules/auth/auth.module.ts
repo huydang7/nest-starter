@@ -5,7 +5,7 @@ import { UserModule } from './../user';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
-import { ConfigModule, ConfigService } from 'src/config';
+import { ConfigModule, ConfigService } from '../../config';
 
 @Module({
   imports: [
