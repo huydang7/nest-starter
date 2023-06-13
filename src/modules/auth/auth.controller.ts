@@ -41,7 +41,13 @@ export class AuthController {
 
   @Post('register')
   async userRegister(@Body() userRegisterDto: UserRegisterDto) {
-    return await this.userService.create(userRegisterDto);
+    const user = await this.userService.create(userRegisterDto);
+    const token = await this.authService.createAccessToken({
+      userId: user.id,
+      role: user.role,
+    });
+
+    return { token: token };
   }
 
   @Get('me')
