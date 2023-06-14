@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService as NestConfigService } from '@nestjs/config';
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { isNil } from 'lodash';
-
 import { UserEntitySubscriber } from 'src/entity-subscribers/user-subscriber';
 import { SnakeNamingStrategy } from 'src/shared/utils/snake-naming.strategy';
 
 @Injectable()
-export class ApiConfigService {
-  constructor(private configService: ConfigService) {}
+export class ConfigService {
+  constructor(private configService: NestConfigService) {}
 
   get isDevelopment(): boolean {
     return this.nodeEnv === 'development';
@@ -94,6 +93,15 @@ export class ApiConfigService {
     };
   }
 
+  get googleMailConfig() {
+    return {
+      clientId: this.getString('GOOGLE_CLIENT_ID'),
+      clientSecret: this.getString('GOOGLE_CLIENT_SECRET'),
+      refreshToken: this.getString('GOOGLE_REFRESH_TOKEN'),
+      sendFrom: this.getString('GOOGLE_SEND_FROM'),
+    };
+  }
+
   private get(key: string): string {
     const value = this.configService.get<string>(key);
 
@@ -105,4 +113,4 @@ export class ApiConfigService {
   }
 }
 
-export const configService = new ApiConfigService(new ConfigService());
+export const configService = new ConfigService(new NestConfigService());

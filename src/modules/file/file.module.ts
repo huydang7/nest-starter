@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { MulterModule } from '@nestjs/platform-express';
+import { ConfigService } from 'src/config/config.service';
 
 import { FileController } from './file.controller';
-import { MulterModule } from '@nestjs/platform-express';
-import { ApiConfigService } from 'src/config/config.service';
-import { ConfigModule } from '@nestjs/config';
 
 export enum FileType {
   IMGS = 'imgs',
@@ -15,10 +15,10 @@ export enum FileType {
   imports: [
     MulterModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ApiConfigService) => ({
+      useFactory: async (configService: ConfigService) => ({
         dest: configService.appConfig.uploadPath,
       }),
-      inject: [ApiConfigService],
+      inject: [ConfigService],
     }),
   ],
 })

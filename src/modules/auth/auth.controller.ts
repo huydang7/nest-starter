@@ -1,25 +1,19 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { Auth, User } from 'src/decorators';
+
 import { UserDto } from '../user/dto/user-dto';
 import { UserService } from '../user/user.service';
-import { AuthService } from './auth.service';
+
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { UserLoginPayloadDto } from './dto/login-payload.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private userService: UserService,
-    private authService: AuthService,
-  ) {}
+  constructor(private userService: UserService, private authService: AuthService) {}
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
@@ -57,7 +51,13 @@ export class AuthController {
   }
 
   @Post('forgot-password')
-  async forgotPassword(@Body() forgotPasswordDto: any) {
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    this.authService.forgotPassword(forgotPasswordDto.email);
+    return { message: 'Reset password email sent' };
+  }
+
+  @Post('reset-password')
+  async resetPassword(@Body() resetpasswordDto: ResetPasswordDto) {
     throw new Error('Not implemented');
   }
 }

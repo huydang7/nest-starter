@@ -1,6 +1,7 @@
 import { Role } from 'src/constants';
 import { AbstractEntity } from 'src/shared/common/abstract.entity';
 import { Column, Entity } from 'typeorm';
+
 import { UserDto } from '../dto/user-dto';
 
 @Entity({ name: 'users' })

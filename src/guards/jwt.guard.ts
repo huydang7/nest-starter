@@ -1,13 +1,8 @@
-import {
-  ExecutionContext,
-  Injectable,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ExecutionContext, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiConfigService } from 'src/config/config.service';
+import { ConfigService } from 'src/config/config.service';
 import { PublicKey } from 'src/constants';
 import { JwtStrategy } from 'src/modules/auth/jwt.strategy';
 import { UserService } from 'src/modules/user/user.service';
@@ -19,8 +14,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
   constructor(
     private reflector: Reflector,
-    private configService: ApiConfigService,
-    private userService: UserService,
+    private configService: ConfigService,
+    private userService: UserService
   ) {
     super();
   }
@@ -59,10 +54,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         });
       }
       if (!this.jwtStrategy) {
-        this.jwtStrategy = new JwtStrategy(
-          this.configService,
-          this.userService,
-        );
+        this.jwtStrategy = new JwtStrategy(this.configService, this.userService);
       }
       try {
         const tokenPayload = this.jwtService.verify(token, {

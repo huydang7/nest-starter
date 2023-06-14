@@ -2,13 +2,16 @@ import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ApiConfigService } from 'src/config/config.service';
+import { ConfigService } from 'src/config/config.service';
 import { AllExceptionsFilter } from 'src/exceptions/all-exceptions-filter';
 import { TransformInterceptor } from 'src/interceptors/response.interceptor';
 import { SharedModule } from 'src/shared/shared.module';
+
 import { AuthModule } from '../auth/auth.module';
 import { FileModule } from '../file/file.module';
+import { MailModule } from '../mail/mail.module';
 import { UserModule } from '../user/user.module';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -21,15 +24,16 @@ import { AppService } from './app.service';
     }),
     TypeOrmModule.forRootAsync({
       imports: [SharedModule],
-      useFactory: (configService: ApiConfigService) => {
+      useFactory: (configService: ConfigService) => {
         return configService.postgresConfig;
       },
 
-      inject: [ApiConfigService],
+      inject: [ConfigService],
     }),
     AuthModule,
     UserModule,
     FileModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [

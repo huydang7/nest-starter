@@ -1,8 +1,10 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { ApiConfigService } from 'src/config/config.service';
+import { ConfigService } from 'src/config/config.service';
+
 import { UserModule } from '../user/user.module';
+
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
@@ -13,13 +15,13 @@ import { JwtStrategy } from './jwt.strategy';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     {
       ...JwtModule.registerAsync({
-        useFactory: (configService: ApiConfigService) => ({
+        useFactory: (configService: ConfigService) => ({
           privateKey: configService.authConfig.privateKey,
           signOptions: {
             expiresIn: configService.authConfig.jwtExpirationTime || '720h',
           },
         }),
-        inject: [ApiConfigService],
+        inject: [ConfigService],
       }),
       global: true,
     },

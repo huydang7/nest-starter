@@ -1,10 +1,10 @@
+import { instanceToPlain } from 'class-transformer';
 import {
   CreateDateColumn,
   DeleteDateColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { instanceToPlain } from 'class-transformer';
 
 export abstract class AbstractEntity {
   @PrimaryGeneratedColumn('uuid')

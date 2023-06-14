@@ -1,14 +1,17 @@
 import { HttpModule } from '@nestjs/axios';
 import { Global, Module } from '@nestjs/common';
-import { ApiConfigService } from 'src/config/config.service';
+import { ConfigService } from 'src/config/config.service';
+import { CustomLoggerModule } from 'src/logger/logger.module';
+import { LoggerService } from 'src/logger/logger.service';
+
 import { GeneratorService } from './services/generator.service';
 
-const providers = [ApiConfigService, GeneratorService];
+const providers = [ConfigService, GeneratorService, LoggerService];
 
 @Global()
 @Module({
   providers,
-  imports: [HttpModule],
+  imports: [HttpModule, CustomLoggerModule],
   exports: [...providers, HttpModule],
 })
 export class SharedModule {}

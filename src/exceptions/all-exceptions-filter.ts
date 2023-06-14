@@ -1,20 +1,19 @@
 import {
-  ExceptionFilter,
-  Catch,
   ArgumentsHost,
+  Catch,
+  ExceptionFilter,
   HttpException,
   HttpStatus,
   Logger,
 } from '@nestjs/common';
-
 import { HttpAdapterHost } from '@nestjs/core';
-import { ApiConfigService } from 'src/config/config.service';
+import { ConfigService } from 'src/config/config.service';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(
     private readonly httpAdapterHost: HttpAdapterHost,
-    private readonly configService: ApiConfigService,
+    private readonly configService: ConfigService
   ) {}
 
   private readonly logger = new Logger('Exception');
@@ -27,16 +26,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const request = ctx.getRequest();
 
     const httpStatus =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+      exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
 
     const responseBody: any = {
       statusCode: httpStatus,
       timestamp: new Date().toISOString(),
       path: request.url,
-      message:
-        exception.response?.message || exception.message || exception?.detail,
+      message: exception.response?.message || exception.message || exception?.detail,
       error: exception.response?.error || exception.message,
       errorCode: exception.response?.errorCode || exception.errorCode,
     };

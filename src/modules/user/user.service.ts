@@ -1,25 +1,18 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PageDto, PageMetaDto, PageOptionsDto } from 'src/shared/common/dto/page.dto';
 import { Repository } from 'typeorm';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserEntity } from './entities/user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { UserDto } from './dto/user-dto';
-import {
-  PageDto,
-  PageMetaDto,
-  PageOptionsDto,
-} from 'src/shared/common/dto/page.dto';
+import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
+    private userRepository: Repository<UserEntity>
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -47,7 +40,7 @@ export class UserService {
     });
     return new PageDto(
       result[0].map((user) => new UserDto(user)),
-      pageMeta,
+      pageMeta
     );
   }
 

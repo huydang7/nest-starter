@@ -1,22 +1,22 @@
 import {
-  Controller,
-  Post,
   BadRequestException,
-  Req,
+  Controller,
   InternalServerErrorException,
+  Post,
+  Req,
 } from '@nestjs/common';
-
-import { ApiConfigService } from 'src/config/config.service';
-import { getStorageDir } from './helper';
 import * as fs from 'fs';
+import path from 'path';
+import { ConfigService } from 'src/config/config.service';
 import stream from 'stream';
 import * as util from 'util';
-import path from 'path';
+
 import { FileType } from './file.module';
+import { getStorageDir } from './helper';
 
 @Controller('file')
 export class FileController {
-  constructor(private configService: ApiConfigService) {}
+  constructor(private configService: ConfigService) {}
   @Post()
   async uploadFile(@Req() req) {
     if (!req.isMultipart()) {
@@ -28,8 +28,7 @@ export class FileController {
       throw new BadRequestException('File is required');
     }
 
-    const fileName =
-      fileData.fieldname + '-' + Date.now() + path.extname(fileData.filename);
+    const fileName = fileData.fieldname + '-' + Date.now() + path.extname(fileData.filename);
 
     const relativePath = await this.handler(fileData.file, fileName);
 

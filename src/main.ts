@@ -1,23 +1,21 @@
-import {
-  ClassSerializerInterceptor,
-  ValidationPipe,
-  HttpStatus,
-  UnprocessableEntityException,
-} from '@nestjs/common';
-import { NestFactory, Reflector } from '@nestjs/core';
-import helmet from '@fastify/helmet';
-import { AppModule } from 'src/modules/app/app.module';
-import { ApiConfigService } from './config/config.service';
-import { SharedModule } from './shared/shared.module';
 import compression from '@fastify/compress';
+import helmet from '@fastify/helmet';
 import fmp from '@fastify/multipart';
 import fstatic from '@fastify/static';
-
 import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
+  ClassSerializerInterceptor,
+  HttpStatus,
+  UnprocessableEntityException,
+  ValidationPipe,
+} from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import path from 'path';
+import { AppModule } from 'src/modules/app/app.module';
+
+import { ConfigService } from './config/config.service';
+import { SharedModule } from './shared/shared.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -25,7 +23,7 @@ async function bootstrap() {
     new FastifyAdapter({ logger: true }),
     {
       cors: true,
-    },
+    }
   );
   await app.register(fstatic, {
     root: path.join(__dirname, 'public'),
@@ -40,10 +38,12 @@ async function bootstrap() {
   await app.register(fmp);
 
   const reflector = app.get(Reflector);
-  const configService = app.select(SharedModule).get(ApiConfigService);
+  const configService = app.select(SharedModule).get(ConfigService);
+
+  app.useLogger(app.get(Logger));
+  app.useGlobalInterceptors(new LoggerErrorInterceptor());
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
-
   app.useGlobalPipes(
     new ValidationPipe({
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
@@ -51,13 +51,13 @@ async function bootstrap() {
       dismissDefaultMessages: true,
       forbidUnknownValues: false,
       exceptionFactory: (errors) => new UnprocessableEntityException(errors),
-    }),
+    })
   );
 
   const port = configService.appConfig.port;
 
   await app.listen(port);
 
-  console.info(`server running on ${await app.getUrl()}`);
+  app.get(Logger).log(`server running on ${await app.getUrl()}`);
 }
 bootstrap();
