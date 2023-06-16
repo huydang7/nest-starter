@@ -1,4 +1,4 @@
-import { instanceToPlain } from 'class-transformer';
+import { Constructor } from 'src/types';
 import {
   CreateDateColumn,
   DeleteDateColumn,
@@ -6,26 +6,38 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export abstract class AbstractEntity {
+import { AbstractDto } from './dto/abstract.dto';
+
+export abstract class AbstractEntity<DTO extends AbstractDto = AbstractDto> {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @CreateDateColumn({
-    type: 'timestamp',
+    type: 'timestamptz',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
-    type: 'timestamp',
+    type: 'timestamptz',
   })
   updatedAt: Date;
 
   @DeleteDateColumn({
-    type: 'timestamp',
+    type: 'timestamptz',
   })
   deletedAt: Date;
 
-  toJSON() {
-    return instanceToPlain(this);
+  private dtoClass?: Constructor<DTO, [AbstractEntity]>;
+
+  toDto(): DTO {
+    const dtoClass = this.dtoClass;
+
+    if (!dtoClass) {
+      throw new Error(
+        `You need to use @UseDto on class (${this.constructor.name}) be able to call toDto function`
+      );
+    }
+
+    return new dtoClass(this);
   }
 }

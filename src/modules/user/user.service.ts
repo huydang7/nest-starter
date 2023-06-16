@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserDto } from './dto/user-dto';
 import { UserEntity } from './entities/user.entity';
 
 @Injectable()
@@ -27,7 +26,7 @@ export class UserService {
     }
     const user = this.userRepository.create(createUserDto);
     await this.userRepository.save(user);
-    return new UserDto(user);
+    return user;
   }
 
   async findAll(pageOption: PageOptionsDto) {
@@ -38,10 +37,7 @@ export class UserService {
       pageOptionsDto: pageOption,
       itemCount: result[1],
     });
-    return new PageDto(
-      result[0].map((user) => new UserDto(user)),
-      pageMeta
-    );
+    return new PageDto(result[0].toDtos(), pageMeta);
   }
 
   async findOne(id: string) {
@@ -49,7 +45,7 @@ export class UserService {
       id,
     });
 
-    return new UserDto(user);
+    return user;
   }
 
   async findOneByEmail(email: string) {
@@ -57,7 +53,7 @@ export class UserService {
       email,
     });
 
-    return new UserDto(user);
+    return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
@@ -68,7 +64,7 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
     Object.assign(user, updateUserDto);
-    return new UserDto(await this.userRepository.save(user));
+    return await this.userRepository.save(user);
   }
 
   async remove(id: string) {

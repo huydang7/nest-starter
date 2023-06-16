@@ -4,6 +4,8 @@ export class AbstractDto {
   updatedAt: Date;
   deletedAt: Date;
 
+  private dtoClass?: AbstractDto;
+
   constructor(dto: Partial<AbstractDto>) {
     Object.assign(this, dto);
   }

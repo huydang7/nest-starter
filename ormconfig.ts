@@ -1,5 +1,5 @@
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { UserEntitySubscriber } from 'src/entity-subscribers/user-subscriber';
+import { UserEntitySubscriber } from 'src/modules/user/entities/user.subscriber';
 import { SnakeNamingStrategy } from 'src/shared/utils/snake-naming.strategy';
 
 import './src/boilerplate.polyfill';

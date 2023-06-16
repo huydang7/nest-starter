@@ -1,11 +1,13 @@
 import { Role } from 'src/constants';
+import { UseDto } from 'src/decorators/use-dto';
 import { AbstractEntity } from 'src/shared/common/abstract.entity';
 import { Column, Entity } from 'typeorm';
 
-import { UserDto } from '../dto/user-dto';
+import { UserDto } from '../dto/user.dto';
 
 @Entity({ name: 'users' })
-export class UserEntity extends AbstractEntity implements UserDto {
+@UseDto(UserDto)
+export class UserEntity extends AbstractEntity<UserDto> {
   @Column({ unique: true, nullable: true })
   email: string;
 

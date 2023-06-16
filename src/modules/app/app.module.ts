@@ -27,7 +27,6 @@ import { AppService } from './app.service';
       useFactory: (configService: ConfigService) => {
         return configService.postgresConfig;
       },
-
       inject: [ConfigService],
     }),
     AuthModule,

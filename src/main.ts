@@ -14,6 +14,8 @@ import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import path from 'path';
 import { AppModule } from 'src/modules/app/app.module';
 
+import './polyfill';
+
 import { ConfigService } from './config/config.service';
 import { SharedModule } from './shared/shared.module';
 
