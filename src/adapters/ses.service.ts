@@ -1,8 +1,9 @@
+import { SendEmailCommand, SendEmailCommandInput, SESClient } from '@aws-sdk/client-ses';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from 'src/config/config.service';
+import { LoggerService } from 'src/logger/logger.service';
 
 import { MailAdapterInterface } from './mail.factory';
-
 export interface EmailAddresses {
   toAddress: string;
   fromAddress?: string;
@@ -10,15 +11,23 @@ export interface EmailAddresses {
 
 @Injectable()
 export class SESAdapter implements MailAdapterInterface {
-  constructor(private configService: ConfigService) {}
+  sesClient: SESClient;
+  constructor(private configService: ConfigService, private loggerService: LoggerService) {
+    this.sesClient = new SESClient({
+      region: this.configService.sesMailConfig.awsRegion,
+      credentials: {
+        secretAccessKey: this.configService.sesMailConfig.awsAccessKey,
+        accessKeyId: this.configService.sesMailConfig.awsKeyId,
+      },
+    });
+  }
 
   async send(to: string[], emailContent: { body: string; subject: string }): Promise<void> {
-    // Create sendEmail params
-    const params = {
+    const params: SendEmailCommandInput = {
       Destination: {
         ToAddresses: to,
       },
-      Source: this.configService.googleMailConfig.sendFrom,
+      Source: `OnCircle <${this.configService.sesMailConfig.sendFrom}>`,
       Message: {
         Body: {
           Html: {
@@ -37,8 +46,10 @@ export class SESAdapter implements MailAdapterInterface {
       },
     };
 
-    console.log(params);
-
-    return;
+    try {
+      await this.sesClient.send(new SendEmailCommand(params));
+    } catch (e) {
+      this.loggerService.error(e);
+    }
   }
 }

@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigService } from 'src/config/config.service';
 
+import { MailModule } from '../mail/mail.module';
 import { OtpModule } from '../otp/otp.module';
 import { UserModule } from '../user/user.module';
 
@@ -27,6 +28,7 @@ import { JwtStrategy } from './jwt.strategy';
       global: true,
     },
     OtpModule,
+    MailModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

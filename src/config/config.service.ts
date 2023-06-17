@@ -102,6 +102,15 @@ export class ConfigService {
     };
   }
 
+  get sesMailConfig() {
+    return {
+      awsKeyId: this.getString('AWS_ACCESS_KEY_ID'),
+      awsAccessKey: this.getString('AWS_SECRET_ACCESS_KEY'),
+      awsRegion: this.getString('AWS_REGION'),
+      sendFrom: this.getString('SES_FROM_ADDRESS'),
+    };
+  }
+
   private get(key: string): string {
     const value = this.configService.get<string>(key);
 

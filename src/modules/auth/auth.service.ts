@@ -6,6 +6,7 @@ import type { Role } from 'src/constants';
 import { TokenType } from 'src/constants';
 import { validateHash } from 'src/shared/common/utils';
 
+import { MailService } from '../mail/mail.service';
 import { OtpType } from '../otp/dto/otp.dto';
 import { OtpService } from '../otp/otp.service';
 import { UserService } from '../user/user.service';
@@ -19,7 +20,8 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private userService: UserService,
-    private otpService: OtpService
+    private otpService: OtpService,
+    private mailService: MailService
   ) {}
 
   async createAccessToken(data: { role: Role; userId: string }) {
@@ -54,6 +56,7 @@ export class AuthService {
       type: OtpType.RESET_PASSWORD,
       expiredAt: dayjs().add(10, 'minutes').format(),
     });
+    await this.mailService.sendResetPasswordEmail(email, otp.otp);
     return otp;
   };
 
