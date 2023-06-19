@@ -1,14 +1,18 @@
-import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/ban-types */
+import { applyDecorators, CanActivate, SetMetadata, UseGuards } from '@nestjs/common';
 import { PublicKey, Role, RoleKey } from 'src/constants';
 import { JwtAuthGuard } from 'src/guards/jwt.guard';
 import { RolesGuard } from 'src/guards/role.guard';
 
-export function Auth(roles: Role[] = [], options?: Partial<{ public: boolean }>): MethodDecorator {
+export function Auth(
+  roles: Role[] = [],
+  options?: Partial<{ public: boolean; otherGuards: (Function | CanActivate)[] }>
+): MethodDecorator {
   const isPublicRoute = options?.public;
 
   return applyDecorators(
     SetMetadata(PublicKey, isPublicRoute),
     SetMetadata(RoleKey, roles),
-    UseGuards(JwtAuthGuard, RolesGuard)
+    UseGuards(JwtAuthGuard, RolesGuard, ...(options?.otherGuards || []))
   );
 }

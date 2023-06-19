@@ -101,3 +101,15 @@ export function ToUpperCase(): PropertyDecorator {
 export function ToPhoneNumber(): PropertyDecorator {
   return Transform((params) => parsePhoneNumber(params.value as string).number);
 }
+
+export function ToObject(): PropertyDecorator {
+  return Transform((params) => {
+    const value = params.value;
+
+    if (isNil(value)) {
+      return {};
+    }
+
+    return JSON.parse(value);
+  });
+}

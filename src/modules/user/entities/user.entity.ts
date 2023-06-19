@@ -1,5 +1,5 @@
 import { Role } from 'src/constants';
-import { UseDto } from 'src/decorators/use-dto';
+import { UseDto } from 'src/decorators/use-dto.decorator';
 import { AbstractEntity } from 'src/shared/common/abstract.entity';
 import { Column, Entity } from 'typeorm';
 

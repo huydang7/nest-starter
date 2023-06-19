@@ -10,3 +10,7 @@ export function validateHash(password?: string, hash?: string) {
   }
   return bcrypt.compare(password, hash);
 }
+
+export const enumToArray = (enumObject) => {
+  return Object.keys(enumObject).map((key) => enumObject[key]);
+};

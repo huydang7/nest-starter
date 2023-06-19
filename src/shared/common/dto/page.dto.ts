@@ -1,4 +1,4 @@
-import { OrderBy } from 'src/constants';
+import { OrderKey } from 'src/constants';
 
 interface IPageMetaDtoParameters {
   pageOptionsDto: PageOptionsDto;
@@ -6,10 +6,21 @@ interface IPageMetaDtoParameters {
 }
 
 export class PageOptionsDto {
-  readonly order = OrderBy.createdAt;
-  readonly page: number = 1;
-  readonly size: number = 10;
-  readonly q?: string;
+  order: Record<any, OrderKey>;
+
+  page = 1;
+  size = 10;
+  q?: string;
+
+  constructor(options?: Partial<PageOptionsDto>) {
+    if (!options?.order) {
+      this.order = {
+        createdAt: 'DESC',
+      };
+    }
+
+    Object.assign(this, options);
+  }
 
   get skip(): number {
     return (this.page - 1) * this.size;

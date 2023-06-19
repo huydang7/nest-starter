@@ -19,6 +19,6 @@ export class OtpEntity extends AbstractEntity<OtpDto> {
   userId: string;
 
   @ManyToOne(() => UserEntity)
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 }
