@@ -47,8 +47,9 @@ export class AuthController {
 
   @Get('me')
   @Auth()
-  getCurrentUser(@User() user: UserDto) {
-    return user;
+  async getCurrentUser(@User() user: UserDto) {
+    const _user = await this.userService.findOne(user.id);
+    return _user.toDto();
   }
 
   @Post('verify-otp')
