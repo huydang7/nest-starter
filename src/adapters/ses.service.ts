@@ -27,7 +27,7 @@ export class SESAdapter implements MailAdapterInterface {
       Destination: {
         ToAddresses: to,
       },
-      Source: `OnCircle <${this.configService.sesMailConfig.sendFrom}>`,
+      Source: `NestStarter <${this.configService.sesMailConfig.sendFrom}>`,
       Message: {
         Body: {
           Html: {
