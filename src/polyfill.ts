@@ -26,5 +26,18 @@ Array.prototype.toDtos = function <
   Entity extends AbstractEntity<Dto>,
   Dto extends AbstractDto
 >(): Dto[] {
-  return compact(map<Entity, Dto>(this as Entity[], (item) => item.toDto()));
+  const convertItemToDto = (item: Entity): Dto => {
+    const dto = item.toDto(); // Convert the current item to DTO
+
+    // Recursively convert properties that are entities to DTOs
+    for (const prop in dto) {
+      if (dto[prop] instanceof AbstractEntity) {
+        dto[prop as any] = convertItemToDto(dto[prop as any]);
+      }
+    }
+
+    return dto;
+  };
+
+  return compact(map<Entity, Dto>(this as Entity[], (item) => convertItemToDto(item)));
 };
