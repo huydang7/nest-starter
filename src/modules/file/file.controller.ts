@@ -1,12 +1,16 @@
 import {
   BadRequestException,
   Controller,
+  Get,
   InternalServerErrorException,
+  Param,
   Post,
   Req,
+  Res,
 } from '@nestjs/common';
+import {} from '@nestjs/platform-fastify';
 import * as fs from 'fs';
-import path from 'path';
+import path, { join } from 'path';
 import { ConfigService } from 'src/config/config.service';
 import stream from 'stream';
 import * as util from 'util';
@@ -50,5 +54,15 @@ export class FileController {
       throw new InternalServerErrorException('Cant upload');
     }
     return filePath;
+  }
+
+  @Get('upload/:year/:month/imgs/:fileName')
+  getFile(@Param() params: any, @Res() res) {
+    const { year, month, fileName } = params;
+
+    return res.sendFile(
+      fileName,
+      join(process.cwd(), this.configService.appConfig.uploadPath, year, month, 'imgs')
+    );
   }
 }
