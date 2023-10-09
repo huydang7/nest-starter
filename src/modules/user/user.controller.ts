@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { Role } from 'src/constants';
 import { Auth } from 'src/decorators';
-import { PageOptionsDto } from 'src/shared/common/dto/page.dto';
+import { PageOptionsDto } from 'src/shared/common/dto/page-option.dto';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -19,8 +19,14 @@ export class UserController {
 
   @Get()
   @Auth([Role.ADMIN])
-  findAll(@Query() pageOption: PageOptionsDto) {
-    return this.userService.findAll(pageOption);
+  findAll(
+    @Query() pageOption: PageOptionsDto,
+    @Query()
+    query: {
+      role: Role[];
+    }
+  ) {
+    return this.userService.findAll(pageOption, query);
   }
 
   @Get(':id')

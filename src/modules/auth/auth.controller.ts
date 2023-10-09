@@ -28,7 +28,7 @@ export class AuthController {
 
     return new UserLoginPayloadDto(user.toDto(), {
       access: {
-        value: token.token,
+        value: token.value,
         expires: token.expires,
       },
     });
@@ -42,7 +42,12 @@ export class AuthController {
       role: user.role,
     });
 
-    return { token: token };
+    return new UserLoginPayloadDto(user.toDto(), {
+      access: {
+        value: token.value,
+        expires: token.expires,
+      },
+    });
   }
 
   @Get('me')

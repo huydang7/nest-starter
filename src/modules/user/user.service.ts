@@ -1,7 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PageDto, PageMetaDto, PageOptionsDto } from 'src/shared/common/dto/page.dto';
-import { Repository } from 'typeorm';
+import { Role } from 'src/constants';
+import { PageMetaDto } from 'src/shared/common/dto/page-meta.dto';
+import { PageOptionsDto } from 'src/shared/common/dto/page-option.dto';
+import { In, Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -29,15 +31,23 @@ export class UserService {
     return user;
   }
 
-  async findAll(pageOption: PageOptionsDto) {
+  async findAll(pageOption: PageOptionsDto, query: { role: Role[] }) {
+    let where = {};
+
+    if (query.role) {
+      where = {
+        role: In(query.role),
+      };
+    }
     const result = await this.userRepository.findAndCount({
       ...pageOption.query,
+      where,
     });
     const pageMeta = new PageMetaDto({
       pageOptionsDto: pageOption,
       itemCount: result[1],
     });
-    return new PageDto(result[0].toDtos(), pageMeta);
+    return result[0].toPageDto(pageMeta);
   }
 
   async findOne(id: string) {
@@ -60,11 +70,15 @@ export class UserService {
     const user = await this.userRepository.findOneBy({
       id,
     });
+
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    Object.assign(user, updateUserDto);
-    return await this.userRepository.save(user);
+    if (!updateUserDto.password) {
+      delete user.password;
+      delete updateUserDto.password;
+    }
+    return await this.userRepository.save(this.userRepository.merge(user, updateUserDto));
   }
 
   async remove(id: string) {

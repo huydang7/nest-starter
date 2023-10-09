@@ -81,7 +81,7 @@ export class ConfigService {
   get authConfig() {
     return {
       privateKey: this.getString('JWT_PRIVATE_KEY'),
-      jwtExpirationTime: this.getNumber('JWT_EXPIRATION_TIME'),
+      jwtExpirationTime: this.getString('JWT_EXPIRATION_TIME'),
     };
   }
 

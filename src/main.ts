@@ -17,6 +17,7 @@ import { AppModule } from 'src/modules/app/app.module';
 import './polyfill';
 
 import { ConfigService } from './config/config.service';
+import { TransformQuery } from './pipes/transform-query';
 import { SharedModule } from './shared/shared.module';
 
 async function bootstrap() {
@@ -47,6 +48,7 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
   app.useGlobalPipes(
+    new TransformQuery(),
     new ValidationPipe({
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
       transform: true,

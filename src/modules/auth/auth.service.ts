@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import dayjs from 'dayjs';
+import ms from 'ms';
 import { ConfigService } from 'src/config/config.service';
 import type { Role } from 'src/constants';
 import { TokenType } from 'src/constants';
@@ -11,6 +12,7 @@ import { OtpType } from '../otp/dto/otp.dto';
 import { OtpService } from '../otp/otp.service';
 import { UserService } from '../user/user.service';
 
+import { UserLoginPayloadDto } from './dto/login-payload.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import type { UserLoginDto } from './dto/user-login.dto';
 
@@ -26,8 +28,10 @@ export class AuthService {
 
   async createAccessToken(data: { role: Role; userId: string }) {
     return {
-      expires: dayjs().add(this.configService.authConfig.jwtExpirationTime, 'second').format(),
-      token: await this.jwtService.signAsync({
+      expires: dayjs()
+        .add(ms(this.configService.authConfig.jwtExpirationTime), 'milliseconds')
+        .format(),
+      value: await this.jwtService.signAsync({
         userId: data.userId,
         type: TokenType.ACCESS_TOKEN,
         role: data.role,
@@ -63,7 +67,7 @@ export class AuthService {
   verifyOtp = async (otp: string) => {
     const otpInfo = await this.otpService.verify(otp);
     if (!otpInfo) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException('Invalid OTP');
     }
     return true;
   };
@@ -72,7 +76,7 @@ export class AuthService {
     const { newPassword, otp } = resetPassword;
     const otpInfo = await this.otpService.verify(otp);
     if (!otpInfo) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException('Invalid OTP');
     }
     const user = await this.userService.update(otpInfo.userId, {
       password: newPassword,
@@ -82,7 +86,9 @@ export class AuthService {
       userId: otpInfo.userId,
       role: user.role,
     });
-    return accessToken;
+    return new UserLoginPayloadDto(user.toDto(), {
+      access: accessToken,
+    });
   };
 
   async validateUser(userLoginDto: UserLoginDto) {

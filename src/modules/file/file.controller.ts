@@ -8,7 +8,6 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import {} from '@nestjs/platform-fastify';
 import * as fs from 'fs';
 import path, { join } from 'path';
 import { ConfigService } from 'src/config/config.service';
@@ -26,6 +25,7 @@ export class FileController {
     if (!req.isMultipart()) {
       throw new BadRequestException('File is required');
     }
+
     const fileData = await req.file();
 
     if (!fileData) {
@@ -35,7 +35,11 @@ export class FileController {
     const fileName = fileData.fieldname + '-' + Date.now() + path.extname(fileData.filename);
 
     const relativePath = await this.handler(fileData.file, fileName);
-
+    if (fileData.file.truncated) {
+      // delete file
+      fs.unlinkSync(relativePath);
+      throw new BadRequestException('File is too large');
+    }
     return {
       url: `/file/${relativePath}`,
       absolutePath: `${this.configService.appConfig.hostUrl}/file/${relativePath}`,
@@ -50,7 +54,6 @@ export class FileController {
     try {
       await pipeline(file, writeStream);
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException('Cant upload');
     }
     return filePath;
