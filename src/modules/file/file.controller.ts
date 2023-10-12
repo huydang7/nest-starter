@@ -1,71 +1,34 @@
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  InternalServerErrorException,
-  Param,
-  Post,
-  Req,
-  Res,
-} from '@nestjs/common';
-import * as fs from 'fs';
-import path, { join } from 'path';
+import { Controller, Get, Post, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
+import { join } from 'path';
 import { ConfigService } from 'src/config/config.service';
-import stream from 'stream';
-import * as util from 'util';
 
-import { FileType } from './file.module';
-import { getStorageDir } from './helper';
+import { storage } from './helper';
 
 @Controller('file')
 export class FileController {
   constructor(private configService: ConfigService) {}
   @Post()
-  async uploadFile(@Req() req) {
-    if (!req.isMultipart()) {
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: storage,
+    })
+  )
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    if (!file) {
       throw new BadRequestException('File is required');
-    }
-
-    const fileData = await req.file();
-
-    if (!fileData) {
-      throw new BadRequestException('File is required');
-    }
-
-    const fileName = fileData.fieldname + '-' + Date.now() + path.extname(fileData.filename);
-
-    const relativePath = await this.handler(fileData.file, fileName);
-    if (fileData.file.truncated) {
-      // delete file
-      fs.unlinkSync(relativePath);
-      throw new BadRequestException('File is too large');
     }
     return {
-      url: `/file/${relativePath}`,
-      absolutePath: `${this.configService.appConfig.hostUrl}/file/${relativePath}`,
+      url: `/${file.path}`,
+      absolutePath: `${this.configService.appConfig.hostUrl}/file/${file.path}`,
     };
   }
 
-  async handler(file: any, filename: string): Promise<string> {
-    const pipeline = util.promisify(stream.pipeline);
-    const filePath = `${getStorageDir(FileType.IMGS)}/${filename}`;
-    const writeStream = fs.createWriteStream(filePath);
-
-    try {
-      await pipeline(file, writeStream);
-    } catch (err) {
-      throw new InternalServerErrorException('Cant upload');
-    }
-    return filePath;
-  }
-
-  @Get('upload/:year/:month/imgs/:fileName')
-  getFile(@Param() params: any, @Res() res) {
-    const { year, month, fileName } = params;
-
-    return res.sendFile(
-      fileName,
-      join(process.cwd(), this.configService.appConfig.uploadPath, year, month, 'imgs')
-    );
+  @Get(':path/*')
+  getFileFullPath(@Req() req, @Res() res: Response) {
+    const fullPath = req.params.path + '/' + req.params[0];
+    return res.sendFile(join(process.cwd(), fullPath));
   }
 }

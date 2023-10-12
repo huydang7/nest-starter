@@ -1,7 +1,3 @@
-import compression from '@fastify/compress';
-import helmet from '@fastify/helmet';
-import fmp from '@fastify/multipart';
-import fstatic from '@fastify/static';
 import {
   ClassSerializerInterceptor,
   HttpStatus,
@@ -9,43 +5,27 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import compression from 'compression';
+import helmet from 'helmet';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
-import path from 'path';
 import { AppModule } from 'src/modules/app/app.module';
 
 import './polyfill';
 
 import { ConfigService } from './config/config.service';
 import { TransformQuery } from './pipes/transform-query';
-import { SharedModule } from './shared/shared.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter({ logger: true }),
-    {
-      cors: true,
-    }
-  );
-  await app.register(fstatic, {
-    root: path.join(__dirname, 'public'),
-  });
+  const app = await NestFactory.create(AppModule);
 
-  await app.register(helmet, {
-    crossOriginEmbedderPolicy: false,
-    crossOriginOpenerPolicy: false,
-    crossOriginResourcePolicy: false,
-  });
-  await app.register(compression);
-  await app.register(fmp);
+  app.use(helmet());
+  app.use(compression());
 
   const reflector = app.get(Reflector);
-  const configService = app.select(SharedModule).get(ConfigService);
+  const configService = app.get(ConfigService);
 
   app.useLogger(app.get(Logger));
   app.useGlobalInterceptors(new LoggerErrorInterceptor());
-
   app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
   app.useGlobalPipes(
     new TransformQuery(),
