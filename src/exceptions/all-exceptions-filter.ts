@@ -37,10 +37,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
       errorCode: exception.response?.errorCode || exception.errorCode,
     };
     if (this.configService.isDevelopment) {
-      responseBody.stack = exception.response?.stack || exception.stack;
+      this.logger.error(responseBody, exception.response?.stack || exception.stack);
+    } else {
+      this.logger.error(responseBody);
     }
-
-    this.logger.error(responseBody);
 
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
   }

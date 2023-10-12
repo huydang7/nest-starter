@@ -15,11 +15,8 @@ import { LoggerService } from './logger.service';
               method: req.method,
               url: req.url,
               query: req.query,
-              params: req.param,
-              headers: {},
               remoteAddress: req.remoteAddress,
               remotePort: req.remotePort,
-              body: {},
             };
 
             return redactedReq;
@@ -29,12 +26,8 @@ import { LoggerService } from './logger.service';
               id: res.id,
               method: res.method,
               url: res.url,
-              query: res.query,
-              params: res.param,
-              headers: {},
               remoteAddress: res.remoteAddress,
               remotePort: res.remotePort,
-              body: {},
             };
 
             return redactedRes;
