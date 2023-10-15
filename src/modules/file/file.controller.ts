@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   InternalServerErrorException,
-  Param,
   Post,
   Req,
   Res,
@@ -36,12 +35,11 @@ export class FileController {
 
     const relativePath = await this.handler(fileData.file, fileName);
     if (fileData.file.truncated) {
-      // delete file
       fs.unlinkSync(relativePath);
       throw new BadRequestException('File is too large');
     }
     return {
-      url: `/file/${relativePath}`,
+      url: `/${relativePath}`,
       absolutePath: `${this.configService.appConfig.hostUrl}/file/${relativePath}`,
     };
   }
@@ -59,13 +57,10 @@ export class FileController {
     return filePath;
   }
 
-  @Get('upload/:year/:month/imgs/:fileName')
-  getFile(@Param() params: any, @Res() res) {
-    const { year, month, fileName } = params;
-
-    return res.sendFile(
-      fileName,
-      join(process.cwd(), this.configService.appConfig.uploadPath, year, month, 'imgs')
-    );
+  @Get(':path/*')
+  getFileFullPath(@Req() req, @Res() res) {
+    const fullPath = req.params.path + '/' + req.params['*'];
+    const fileName = fullPath.split('/').pop();
+    return res.sendFile(fileName, join(process.cwd(), fullPath.split(fileName)[0]));
   }
 }

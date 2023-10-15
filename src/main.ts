@@ -18,7 +18,6 @@ import './polyfill';
 
 import { ConfigService } from './config/config.service';
 import { TransformQuery } from './pipes/transform-query';
-import { SharedModule } from './shared/shared.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -28,8 +27,11 @@ async function bootstrap() {
       cors: true,
     }
   );
+  const configService = app.get(ConfigService);
+
   await app.register(fstatic, {
-    root: path.join(__dirname, 'public'),
+    root: path.join(__dirname, `../../${configService.appConfig.uploadPath}`),
+    prefix: `/${configService.appConfig.uploadPath}/`,
   });
 
   await app.register(helmet, {
@@ -41,7 +43,6 @@ async function bootstrap() {
   await app.register(fmp);
 
   const reflector = app.get(Reflector);
-  const configService = app.select(SharedModule).get(ConfigService);
 
   app.useLogger(app.get(Logger));
   app.useGlobalInterceptors(new LoggerErrorInterceptor());
