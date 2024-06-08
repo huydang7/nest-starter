@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService as NestConfigService } from '@nestjs/config';
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { isNil } from 'lodash';
-import { UserEntitySubscriber } from 'src/modules/user/entities/user.subscriber';
-import { SnakeNamingStrategy } from 'src/shared/utils/snake-naming.strategy';
+
+import { UserEntitySubscriber } from '@/modules/user/entities/user.subscriber';
+import { SnakeNamingStrategy } from '@/shared/utils/snake-naming.strategy';
 
 @Injectable()
 export class ConfigService {
@@ -49,6 +50,10 @@ export class ConfigService {
 
   get nodeEnv(): string {
     return this.getString('NODE_ENV');
+  }
+
+  get logLevel(): string {
+    return this.getString('LOG_LEVEL');
   }
 
   get postgresConfig(): TypeOrmModuleOptions {

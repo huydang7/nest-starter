@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { readFileSync } from 'fs';
 import handlebars from 'handlebars';
 import path from 'path';
-import { MailAdapterFactory, MailAdapterInterface } from 'src/adapters/mail.factory';
+
+import { MailAdapterFactory, MailAdapterInterface } from '@/adapters/mail.factory';
 @Injectable()
 export class MailService {
   private emailAdapter: MailAdapterInterface;

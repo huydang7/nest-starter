@@ -1,7 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { Role } from 'src/constants';
-import { Auth } from 'src/decorators';
-import { PageOptionsDto } from 'src/shared/common/dto/page-option.dto';
+
+import { Role } from '@/constants';
+import { Auth } from '@/decorators';
+import { PageOptionsDto } from '@/shared/common/dto/page-option.dto';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';

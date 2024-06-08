@@ -1,7 +1,8 @@
-import { Role } from 'src/constants';
-import { UseDto } from 'src/decorators/use-dto.decorator';
-import { AbstractEntity } from 'src/shared/common/abstract.entity';
 import { Column, Entity } from 'typeorm';
+
+import { Role } from '@/constants';
+import { UseDto } from '@/decorators/use-dto.decorator';
+import { AbstractEntity } from '@/shared/common/abstract.entity';
 
 import { UserDto } from '../dto/user.dto';
 

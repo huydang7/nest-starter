@@ -1,10 +1,11 @@
-import { Constructor } from 'src/types';
 import {
   CreateDateColumn,
   DeleteDateColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { Constructor } from '@/types';
 
 import { AbstractDto } from './dto/abstract.dto';
 

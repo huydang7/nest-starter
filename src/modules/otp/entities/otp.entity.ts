@@ -1,6 +1,7 @@
-import { UserEntity } from 'src/modules/user/entities/user.entity';
-import { AbstractEntity } from 'src/shared/common/abstract.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+
+import { UserEntity } from '@/modules/user/entities/user.entity';
+import { AbstractEntity } from '@/shared/common/abstract.entity';
 
 import { OtpDto, OtpType } from '../dto/otp.dto';
 
@@ -12,10 +13,15 @@ export class OtpEntity extends AbstractEntity<OtpDto> {
   @Column({ type: 'timestamptz' })
   expiredAt: Date;
 
-  @Column()
+  @Column({
+    type: 'enum',
+    enum: OtpType,
+  })
   type: OtpType;
 
-  @Column()
+  @Column({
+    type: 'uuid',
+  })
   userId: string;
 
   @ManyToOne(() => UserEntity)

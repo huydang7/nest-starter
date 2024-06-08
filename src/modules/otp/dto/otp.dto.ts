@@ -1,4 +1,4 @@
-import { AbstractDto } from 'src/shared/common/dto/abstract.dto';
+import { AbstractDto } from '@/shared/common/dto/abstract.dto';
 
 export enum OtpType {
   'RESET_PASSWORD' = 'RESET_PASSWORD',

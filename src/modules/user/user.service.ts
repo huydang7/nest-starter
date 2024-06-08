@@ -1,9 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Role } from 'src/constants';
-import { PageMetaDto } from 'src/shared/common/dto/page-meta.dto';
-import { PageOptionsDto } from 'src/shared/common/dto/page-option.dto';
 import { In, Repository } from 'typeorm';
+
+import { Role } from '@/constants';
+import { PageMetaDto } from '@/shared/common/dto/page-meta.dto';
+import { PageOptionsDto } from '@/shared/common/dto/page-option.dto';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';

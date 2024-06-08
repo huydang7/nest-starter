@@ -2,10 +2,11 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { JwtService } from '@nestjs/jwt';
 import dayjs from 'dayjs';
 import ms from 'ms';
-import { ConfigService } from 'src/config/config.service';
-import type { Role } from 'src/constants';
-import { TokenType } from 'src/constants';
-import { validateHash } from 'src/shared/common/utils';
+
+import { ConfigService } from '@/config/config.service';
+import type { Role } from '@/constants';
+import { TokenType } from '@/constants';
+import { validateHash } from '@/shared/common/utils';
 
 import { MailService } from '../mail/mail.service';
 import { OtpType } from '../otp/dto/otp.dto';

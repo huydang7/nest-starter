@@ -1,6 +1,7 @@
 import { Exclude } from 'class-transformer';
-import { Role } from 'src/constants';
-import { AbstractDto } from 'src/shared/common/dto/abstract.dto';
+
+import { Role } from '@/constants';
+import { AbstractDto } from '@/shared/common/dto/abstract.dto';
 
 export class UserDto extends AbstractDto {
   name: string;

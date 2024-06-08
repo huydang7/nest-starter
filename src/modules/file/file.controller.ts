@@ -3,7 +3,8 @@ import { BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { join } from 'path';
-import { ConfigService } from 'src/config/config.service';
+
+import { ConfigService } from '@/config/config.service';
 
 import { storage } from './helper';
 

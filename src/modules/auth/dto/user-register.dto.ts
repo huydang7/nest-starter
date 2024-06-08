@@ -6,8 +6,9 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
-import { Trim } from 'src/decorators/transform.decorator';
 import { Column } from 'typeorm';
+
+import { Trim } from '@/decorators/transform.decorator';
 
 export class UserRegisterDto {
   @IsString()

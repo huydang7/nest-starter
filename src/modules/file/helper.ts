@@ -2,7 +2,8 @@ import dayjs from 'dayjs';
 import { existsSync, mkdirSync } from 'fs';
 import { diskStorage } from 'multer';
 import path from 'path';
-import { configService } from 'src/config/config.service';
+
+import { configService } from '@/config/config.service';
 
 import { FileType } from './file.module';
 

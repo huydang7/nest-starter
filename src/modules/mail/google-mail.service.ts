@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
 import { OAuth2Client } from 'google-auth-library';
 import nodemailer, { Transporter } from 'nodemailer';
-import { MailAdapterInterface } from 'src/adapters/mail.factory';
-import { ConfigService } from 'src/config/config.service';
-import { LoggerService } from 'src/logger/logger.service';
+
+import { MailAdapterInterface } from '@/adapters/mail.factory';
+import { ConfigService } from '@/config/config.service';
+import { LoggerService } from '@/logger/logger.service';
 
 export interface EmailAddresses {
   toAddress: string;
@@ -13,7 +14,10 @@ export interface EmailAddresses {
 @Injectable()
 export class GoogleMailAdapter implements MailAdapterInterface {
   transport: Transporter;
-  constructor(private configService: ConfigService, private loggerService: LoggerService) {
+  constructor(
+    private configService: ConfigService,
+    private loggerService: LoggerService
+  ) {
     this.initMailClient();
   }
 

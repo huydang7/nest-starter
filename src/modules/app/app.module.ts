@@ -1,11 +1,14 @@
-import { Global, Module } from '@nestjs/common';
+import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigService } from 'src/config/config.service';
-import { AllExceptionsFilter } from 'src/exceptions/all-exceptions-filter';
-import { TransformInterceptor } from 'src/interceptors/response.interceptor';
-import { SharedModule } from 'src/shared/shared.module';
+
+import { ConfigService } from '@/config/config.service';
+import { AllExceptionsFilter } from '@/exceptions/all-exceptions-filter';
+import { TransformInterceptor } from '@/interceptors/response.interceptor';
+import { HttpRequestContextMiddleware } from '@/middlewares/http-request-context.middleware';
+import { RequestIdHeaderMiddleware } from '@/middlewares/request-id-header.middleware';
+import { SharedModule } from '@/shared/shared.module';
 
 import { AuthModule } from '../auth/auth.module';
 import { FileModule } from '../file/file.module';
@@ -46,4 +49,10 @@ import { AppService } from './app.service';
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestIdHeaderMiddleware, HttpRequestContextMiddleware).forRoutes('*');
+  }
+}
+{
+}

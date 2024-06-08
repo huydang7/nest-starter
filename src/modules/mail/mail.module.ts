@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ExternalEmailModule } from 'src/adapters/external-email.module';
+
+import { ExternalEmailModule } from '@/adapters/external-email.module';
 
 import { MailService } from './mail.service';
 

@@ -8,7 +8,8 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import compression from 'compression';
 import helmet from 'helmet';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
-import { AppModule } from 'src/modules/app/app.module';
+
+import { AppModule } from '@/modules/app/app.module';
 
 import './polyfill';
 

@@ -1,7 +1,8 @@
 import { SendEmailCommand, SendEmailCommandInput, SESClient } from '@aws-sdk/client-ses';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from 'src/config/config.service';
-import { LoggerService } from 'src/logger/logger.service';
+
+import { ConfigService } from '@/config/config.service';
+import { LoggerService } from '@/logger/logger.service';
 
 import { MailAdapterInterface } from './mail.factory';
 export interface EmailAddresses {
@@ -12,7 +13,10 @@ export interface EmailAddresses {
 @Injectable()
 export class SESAdapter implements MailAdapterInterface {
   sesClient: SESClient;
-  constructor(private configService: ConfigService, private loggerService: LoggerService) {
+  constructor(
+    private configService: ConfigService,
+    private loggerService: LoggerService
+  ) {
     this.sesClient = new SESClient({
       region: this.configService.sesMailConfig.awsRegion,
       credentials: {

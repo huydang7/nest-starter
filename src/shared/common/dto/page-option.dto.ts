@@ -1,5 +1,5 @@
-import { OrderKey } from 'src/constants';
-import { ToInt } from 'src/decorators';
+import { OrderKey } from '@/constants';
+import { ToInt } from '@/decorators';
 
 export class PageOptionsDto {
   constructor(options?: Partial<PageOptionsDto>) {

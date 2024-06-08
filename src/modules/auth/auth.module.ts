@@ -1,7 +1,8 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { ConfigService } from 'src/config/config.service';
+
+import { ConfigService } from '@/config/config.service';
 
 import { MailModule } from '../mail/mail.module';
 import { OtpModule } from '../otp/otp.module';

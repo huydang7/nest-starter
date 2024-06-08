@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { applyDecorators, CanActivate, SetMetadata, UseGuards } from '@nestjs/common';
-import { PublicKey, Role, RoleKey } from 'src/constants';
-import { JwtAuthGuard } from 'src/guards/jwt.guard';
-import { RolesGuard } from 'src/guards/role.guard';
+
+import { PublicKey, Role, RoleKey } from '@/constants';
+import { JwtAuthGuard } from '@/guards/jwt.guard';
+import { RolesGuard } from '@/guards/role.guard';
 
 export function Auth(
   roles: Role[] = [],
