@@ -21,7 +21,7 @@ const convertItemToDto = <Entity extends AbstractEntity<Dto>, Dto extends Abstra
 
   for (const prop in dto) {
     if (dto[prop] instanceof AbstractEntity) {
-      dto[prop] = convertItemToDto(dto[prop] as AbstractEntity) as any;
+      dto[prop] = convertItemToDto(dto[prop] as AbstractEntity) as Dto[Extract<keyof Dto, string>];
     }
   }
 
@@ -30,7 +30,7 @@ const convertItemToDto = <Entity extends AbstractEntity<Dto>, Dto extends Abstra
 
 Array.prototype.toDtos = function <
   Entity extends AbstractEntity<Dto>,
-  Dto extends AbstractDto
+  Dto extends AbstractDto,
 >(): Dto[] {
   const items: Entity[] = this as Entity[];
 
