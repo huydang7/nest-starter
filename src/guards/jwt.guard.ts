@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 
 import { ConfigService } from '@/config/config.service';
-import { PublicKey } from '@/constants';
+import { PUBLIC_KEY } from '@/constants';
 import { JwtStrategy } from '@/modules/auth/jwt.strategy';
 import { UserService } from '@/modules/user/user.service';
 
@@ -24,7 +24,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   private readonly logger = new Logger('JwtAuthGuard');
 
   canActivate(context: ExecutionContext) {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(PublicKey, [
+    const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);

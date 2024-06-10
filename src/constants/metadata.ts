@@ -1,2 +1,2 @@
-export const RoleKey = 'roles';
-export const PublicKey = 'public';
+export const ROLE_KEY = 'roles';
+export const PUBLIC_KEY = 'public';
