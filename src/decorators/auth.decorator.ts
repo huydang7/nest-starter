@@ -11,7 +11,7 @@ type AuthDecoratorOptions = {
   otherGuards?: (Function | CanActivate)[];
 };
 
-export function Auth(options?: AuthDecoratorOptions): MethodDecorator {
+export function Auth(options?: AuthDecoratorOptions): MethodDecorator & ClassDecorator {
   const { isPublic = false, roles = [], otherGuards = [] } = options || {};
   return applyDecorators(
     SetMetadata(PUBLIC_KEY, isPublic),

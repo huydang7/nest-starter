@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/common';
 
-import { Auth, User } from '@/decorators';
+import { User } from '@/decorators';
 
 import { UserDto } from '../user/dto/user.dto';
 import { UserService } from '../user/user.service';
@@ -55,7 +55,6 @@ export class AuthController {
   }
 
   @Get('me')
-  @Auth()
   async getCurrentUser(@User() user: UserDto) {
     const _user = await this.userService.findOne(user.id);
     return _user.toDto();
