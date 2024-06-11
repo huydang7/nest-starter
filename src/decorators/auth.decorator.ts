@@ -5,15 +5,17 @@ import { PUBLIC_KEY, Role, ROLE_KEY } from '@/constants';
 import { JwtAuthGuard } from '@/guards/jwt.guard';
 import { RolesGuard } from '@/guards/role.guard';
 
-export function Auth(
-  roles: Role[] = [],
-  options?: Partial<{ public: boolean; otherGuards: (Function | CanActivate)[] }>
-): MethodDecorator {
-  const isPublicRoute = options?.public;
+type AuthDecoratorOptions = {
+  isPublic?: boolean;
+  roles?: Role[];
+  otherGuards?: (Function | CanActivate)[];
+};
 
+export function Auth(options?: AuthDecoratorOptions): MethodDecorator {
+  const { isPublic = false, roles = [], otherGuards = [] } = options || {};
   return applyDecorators(
-    SetMetadata(PUBLIC_KEY, isPublicRoute),
+    SetMetadata(PUBLIC_KEY, isPublic),
     SetMetadata(ROLE_KEY, roles),
-    UseGuards(JwtAuthGuard, RolesGuard, ...(options?.otherGuards || []))
+    UseGuards(JwtAuthGuard, RolesGuard, ...(otherGuards || []))
   );
 }
